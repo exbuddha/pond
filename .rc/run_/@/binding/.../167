@@ -1,0 +1,1 @@
+eval '[[ -z $'"$BKW"'LN ]]||{ echo;return_ "$BKR";eval "$'"$BKW"'LN";BKR="$?";'"$BKW"'LN=;'"$BKW"'I=;}'

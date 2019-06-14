@@ -1,0 +1,1 @@
+eval 'J="${#'"$BKW"'LN}" eval "$(resource_ run_/line/jump)"'

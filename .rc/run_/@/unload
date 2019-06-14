@@ -1,0 +1,1 @@
+local c;[[ -z $UDD ]]||c='LDD='"$(printf '%q' "$UDD")"\ ;[[ -z ${VER+1} ]]||c="$c"'VER='"$(printf '%q' "$VER")"\ ;[[ -z $MODE ]]||c="$c"'MODE='"$(printf '%q' "$MODE")"\ ;[[ -z $UDX ]]||c="$c"'LDX='"$(printf '%q' "$UDX")"\ ;eval "$1"'(){ '"$c"'eval "$(recall_ run_/load)" '"$1"' "$@";}'

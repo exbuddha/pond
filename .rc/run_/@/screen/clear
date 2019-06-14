@@ -1,0 +1,1 @@
+clear;eval 'echo -n "$'"$BKW"'LN";[[ '"$BKW"'I -eq ${#'"$BKW"'LN} ]]||tput cub "$((${#'"$BKW"'LN}-'"$BKW"'I))"'

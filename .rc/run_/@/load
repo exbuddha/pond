@@ -1,0 +1,2 @@
+if [[ -z $LDD ]];then EXT="/${WKD%/}/.rc/$1/$VER/main" eval "$(resource_ run_/ext)"||{ [[ ${SRC%/} != ${WKD%/} ]]&&EXT="/${SRC%/}/.rc/$1/$VER/main" eval "$(resource_ run_/ext)";}||eval "$EXX";else eval 'EXT="$'"$LDD"'" eval "$(resource_ run_/ext)"'||eval "$EXX";fi;eval "$1"'(){ '"$(cat "$ext" 2>/dev/null)"'
+}'||eval "$LDX";"$@"

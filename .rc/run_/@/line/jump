@@ -1,0 +1,1 @@
+eval 'if [[ J -lt '"$BKW"'I&&J -ge 0 ]];then tput cub "$(('"$BKW"'I-J))";'"$BKW"'I="$J";elif [[ J -gt '"$BKW"'I&&J -le ${#'"$BKW"'LN} ]];then tput cuf "$((J-'"$BKW"'I))";'"$BKW"'I="$J";fi'

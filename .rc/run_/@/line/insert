@@ -1,0 +1,1 @@
+eval '[[ '"$BKW"'I -eq ${#'"$BKW"'LN} ]]||tput ich 1;echo -n "$'"$BKW"'BUF";'"$BKW"'LN="${'"$BKW"'LN:0:'"$BKW"'I}$'"$BKW"'BUF${'"$BKW"'LN:'"$BKW"'I}";(('"$BKW"'I++))'

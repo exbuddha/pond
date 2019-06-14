@@ -1,0 +1,1 @@
+local ext;if [[ $EXT == /* ]];then ext="$(realpath "${EXT#/}" 2>/dev/null)";[[ -e $ext ]]||ext=;elif [[ -n $EXT ]];then EXT=".rc/$(sed 's/\//\/@\//'<<<"$EXT")";ext="$(realpath "${WKD%/}/$EXT" 2>/dev/null)";[[ -e $ext ]]||{ if [[ ${SRC%/} != ${WKD%/} ]];then ext="$(realpath "${SRC%/}/$EXT" 2>/dev/null)";[[ -e $ext ]]||ext=;else ext=;fi;};else ext=;fi;[[ -n $ext ]]&&EXT="$ext"

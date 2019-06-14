@@ -1,0 +1,5 @@
+eval '[[ '"$BKW"'I -lt ${#'"$BKW"'LN} ]]&&{ '"$BKW"'LN="${'"$BKW"'LN:0:'"$BKW"'I}${'"$BKW"'LN:'"$BKW"'I+1}";tput -S <<!
+sc
+el
+!
+echo -n "${'"$BKW"'LN:'"$BKW"'I}";tput rc;}'
