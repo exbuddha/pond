@@ -1,0 +1,36 @@
+## Key Bindings
+
+  - `_num` - visible ASCII chars
+  - `_` - unconventional keystrokes
+  - `0` - IFS (space, tab, enter)
+  - `1` - backspace
+  - `2` - mod backspace
+  - `3-6` - up, down, right, left
+  - `7` - home
+  - `8` - end
+  - `9-12` - F1-F4
+  - `13-19` - up variations (shift, alt, shift-alt, ctrl, shift-ctrl, ctrl-alt, shift-ctrl-alt)
+  - `20-26` - down variations
+  - `27-33` - right variations
+  - `34-40` - left variations
+  - `41-47` - end variations
+  - `48-54` - home variations
+  - `55-61` - F1 variations
+  - `62-68` - F2 variations
+  - `69-75` - F3 variations
+  - `76-82` - F4 variations
+  - `83-89` - del variations
+  - `90-96` - pgup variations
+  - `97-103` - pgdn variations
+  - `104-110` - F5 variations
+  - `111-117` - F6 variations
+  - `118-124` - F7 variations
+  - `125-131` - F8 variations
+  - `132-138` - F9 variations
+  - `139-145` - F10 variations
+  - `146-152` - F11 variations
+  - `153-159` - F12 variations
+  - `160-163` - F9-F12
+  - `164-167` - F5-F8
+  - `168` - del
+  - `169-170` - pgup, pgdn

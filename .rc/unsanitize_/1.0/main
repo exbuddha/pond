@@ -1,0 +1,1 @@
+awk 'BEGIN{for(n=0;n<256;n++)d[n]=sprintf("%c",n);for(n=1;n<ARGC;n++){s=d[ARGV[n]];if(s!="")printf(s);else printf(ARGV[n])}}' $(sed 's/_/ /g;s/\([[:digit:]]\)\([[:alpha:]]\)/\1 \2/g'<<<"$1")

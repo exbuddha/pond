@@ -1,0 +1,1 @@
+[[ -n $OUT ]]&&{ eval 'OUT="$(realpath "$OUT")"' 2>/dev/null||[[ MODE -ne 2 ]] 2>/dev/null||return;};while [[ MODE -eq 1 ]] 2>/dev/null||{ [[ MODE -eq 2 ]] 2>/dev/null&&eval "${RESET:-[[ -n \$OUT ]]&&! mkdir -p \"\$OUT\"}";};do eval "${WAIT:-sleep \"\$SLEEP\" 2>/dev/null}";done

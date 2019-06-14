@@ -1,0 +1,1 @@
+eval 'read -rsn1 '"$BKW"'KB';eval "$WRK"
