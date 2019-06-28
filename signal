@@ -1,0 +1,90 @@
+[[ -z $SIGPID ]] || kill $SIGPID 2>/dev/null
+SLEEP="${SLEEP:-1}"
+if [[ $SLEEP == */* ]]; then
+    SIGWRK='sleep $(<$SLEEP)||sleep 1'
+else
+    SIGWRK="${SIGWRK:-sleep \$SLEEP||sleep 1}"
+fi
+SIG="${SIG:-SIGUSR1}"
+COLOR="${COLOR:-1}"
+STATUS='ipclock'
+
+type -t update >/dev/null || \
+update() {
+    refresh
+}
+
+type -t refresh >/dev/null || \
+refresh() {
+    [[ $((REF++)) -ne 0 ]] || {
+        type -t "$STATUS" >/dev/null && MSG="$("$STATUS" 2>/dev/null)"
+        [[ -z ${MSG+1} ]] || {
+            local -i x="$(($(tput cols)-${#MSG}-4))"
+            tput -S <<!
+sc
+cup 0 $x
+!
+            if [[ COLOR -eq 0 ]] 2>/dev/null; then
+                echo -n '[ '"$MSG"' ]'
+            else
+                echo -n -e '\033[0;33m[ '"$MSG"' ]\033[0m'
+            fi
+            tput rc
+        }
+        REF=
+    }
+}
+
+ipclock() {
+    local ip
+    if [[ $OSTYPE == darwin* ]]; then
+        ip="$(ipconfig getifaddr en0 2>/dev/null)"
+    else
+        ip="$(hostname -I 2>/dev/null | cut -d' ' -f1)"
+    fi
+    [[ -z $ip ]] || printf "$ip"
+    local clk="$(date +%H:%M:%S 2>/dev/null)"
+    [[ -z $clk ]] || { [[ -z "$ip" ]] || printf ' - '; printf "$clk"; }
+}
+
+subpid() {
+    local -a ln
+    IFS=$'\n' read -d '' -ra ln <<< "$(ps -f | grep "$0")"
+    local -i i=1
+    for ((;i<${#ln[@]};i++)) do
+        local pid="$(awk '{printf $2}' <<< "${ln[i]}")"
+        [[ $pid == $$ || $(awk '{printf $8}' <<< "${ln[i]}") == grep || " $* " == *" $pid "* ]] || echo -n " $pid"
+    done
+}
+
+[[ $SIG != 0 ]] && trap update $SIG && {
+    if [[ COLOR -eq 0 ]] 2>/dev/null; then
+        echo 'Starting new signal process'
+    else
+        echo -e '\033[0;33mStarting new signal process\033[0m'
+    fi
+    SIGPID="$(subpid)"
+    (
+        BKPID="$$"
+        for ((;;)) do
+            [[ -z $SIG ]] || kill -"${SIG#-}" "$BKPID"
+            eval "$SIGWRK"
+        done &
+    ) 2>/dev/null
+    SIGPID="$(subpid "$SIGPID" | awk '{printf $1}')"
+    PST=(PST[1] 'kill $SIGPID 2>/dev/null')
+    PRE=(PRE[1] 'PST=(PST[1] '\''PST=("${PST[@]:2}")'\'' "${PST[@]}")')
+}
+
+WRK=
+PSTWRK='[[ $((++FRM%WKS)) -ne 0 ]]||refresh'
+FRM=-1
+WKS=12
+PSTKB164='refresh;LN=1'
+PSTKB167='refresh;LN='
+PSTLN='[[ LN -eq 0 ]]||refresh'
+LN=
+
+trap break SIGINT
+
+[[ -z $1 ]] || "$@"

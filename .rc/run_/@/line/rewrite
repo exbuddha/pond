@@ -1,1 +1,1 @@
-eval 'tput sc;[[ $'"$BKW"'BUF =~ ^\\(.*):(.*) ]];J="$((${BASH_REMATCH[1]:-0}))" eval "$(resource_ run_/line_/jump_);echo -n \"\${'"$BKW"'LN:J:${BASH_REMATCH[2]:-${#'"$BKW"'LN}-J}}\"";tput rc'
+eval 'tput sc;[[ $'"$BKW"'BUF =~ ^\\(.*):(.*) ]];J="$((${BASH_REMATCH[1]:-0}))" eval "$(resource_ run_/line_/jump_);echo -n \"\${'"$BKW"'LN:J:${BASH_REMATCH[2]:-${#'"$BKW"'LN}-J}}\"";tput rc';eval "$PSTLN"
