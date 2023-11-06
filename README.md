@@ -43,4 +43,6 @@ options:
 
     WKD            work directory
 
-    WRK            command line plug-in</code></pre>
+    WRK            command line plug-in
+
+    BKW            command line stack counter</code></pre>
