@@ -19,13 +19,13 @@ options:
 
     --post code    post-run code
 
-    RESET          reset test for mode 2
-
-    SLEEP          sleep time for modes 1 and 2
-
     MODE           run mode
 
     WAIT           wait command for modes 1 and 2
+
+    SLEEP          sleep time for modes 1 and 2
+
+    RESET          reset test for mode 2
 
     OUT            output directory
 
@@ -41,6 +41,8 @@ options:
 
     WKD            work directory
 
-    WRK            command line plug-in
+    WRK            command line plug-in code
+
+    BKP            command line keybinding path
 
     BKW            command line stack counter'>&2;set -- 1 0;;-v|--version)echo "$VER">&2;set -- 1 0;;*)set -- 0 "$@";;esac;fi;elif [[ -z $1&&$# -ne 0 ]];then set -- 1 127;else set -- 0 "$@";fi;eval 'shift;[[ '"$1"' -eq 0 ]]'

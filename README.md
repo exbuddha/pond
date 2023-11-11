@@ -21,13 +21,13 @@ options:
 
     --post code    post-run code
 
-    RESET          reset test for mode 2
-
-    SLEEP          sleep time for modes 1 and 2
-
     MODE           run mode
 
     WAIT           wait command for modes 1 and 2
+
+    SLEEP          sleep time for modes 1 and 2
+
+    RESET          reset test for mode 2
 
     OUT            output directory
 
@@ -43,24 +43,26 @@ options:
 
     WKD            work directory
 
-    WRK            command line plug-in
+    WRK            command line plug-in code
+
+    BKP            command line keybinding path
 
     BKW            command line stack counter</code></pre>
 
 #### Name Reservation:
 
-Reservation is required for correctness and specifically in the case of recursive functions. By default, name reservation is disabled. In order to enable it, set `RSV` equal to a positive integer causing the runner to reserve all environment variables before evaluating the command. After that point, anywhere in the code where name reservation becomes a requirement again, set `RSV` equal to an array with the first element being a positive integer and the rest being the names that must be reserved going forward. Once these names are reserved, `WRD` will hold the smallest string that, when prepended to any variable name, will guarantee that there will be no naming collisions.
+Reservation is required for correctness and specifically in the case of recursive functions. By default, name reservation is disabled. In order to enable it, set `RSV` equal to a positive integer forcing the runner to reserve all environment variables before evaluating the command. After that point, anywhere in the code where name reservation becomes a requirement again, set `RSV` equal to an array with the first element being a positive integer and the rest being the names that must be reserved going forward, then evaluate resource `run_/reserve`. Once these names are reserved, `WRD` will hold the smallest string that, prepended to any variable name, will guarantee that there will be no naming collisions.
 
 These names are reserved by the runner:
 
   - Single underscore starting character in all variable and function names is reserved.
-  - Variable names `BKX`, `ext`, `EXT`, `EXX`, `RCT`, `RCX`, `LDD`, `LDX`, `UDD`, and `UDX` are reserved in addition to the variables named above.
+  - Variable names `BKP`, `BKX`, `ext`, `EXT`, `EXX`, `RCT`, `RCX`, `LDD`, `LDX`, `UDD`, and `UDX` are reserved in addition to the variables named above.
   - Function names `main_`, `recall_`, `resource_`, `run_`, and `return_` are all reserved.
   - Variable `_64run_95_47mkdir_95_out` is a special variable evaluated by the runner after parsing the options. The runner allows this variable to be overridden by the environment before it is loaded from disk.
 
 #### Code Extension:
 
-Code extension, similar to `source` and `eval` commands, allows for code to be reloaded from disk or memory on-demand. It is a hashing strategy for variable and function names. All extended (cached) variables and functions are prepended with a single underscore character in order to avoid naming collisions with user variables.
+Code extension, similar to `source` and `eval` commands, allows for code to be reloaded from disk or memory on-demand. It is a hashing strategy for variable and function names. All extended (cached) variables and functions are prepended with a single underscore character in order to avoid naming collisions with user variables or functions.
 
   - Source directory, work directory, and resourcing:
 
