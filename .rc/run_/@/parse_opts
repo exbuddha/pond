@@ -37,12 +37,12 @@ options:
 
     SRC            runner directory
 
-    VER            framework version
-
     WKD            work directory
 
     WRK            command line plug-in code
 
     BKP            command line keybinding path
 
-    BKW            command line stack counter'>&2;set -- 1 0;;-v|--version)echo "$VER">&2;set -- 1 0;;*)set -- 0 "$@";;esac;fi;elif [[ -z $1&&$# -ne 0 ]];then set -- 1 127;else set -- 0 "$@";fi;eval 'shift;[[ '"$1"' -eq 0 ]]'
+    BKW            command line stack counter
+
+    VER            runner version'>&2;set -- 1 0;;-v|--version)echo "$VER">&2;set -- 1 0;;*)set -- 0 "$@";;esac;fi;elif [[ -z $1&&$# -ne 0 ]];then set -- 1 127;else set -- 0 "$@";fi;eval 'shift;[[ '"$1"' -eq 0 ]]'

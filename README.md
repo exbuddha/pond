@@ -39,15 +39,15 @@ options:
 
     SRC            runner directory
 
-    VER            framework version
-
     WKD            work directory
 
     WRK            command line plug-in code
 
     BKP            command line keybinding path
 
-    BKW            command line stack counter</code></pre>
+    BKW            command line stack counter
+
+    VER            runner version</code></pre>
 
 #### Name Reservation:
 
