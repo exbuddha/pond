@@ -80,7 +80,7 @@ Code extension, similar to `source` and `eval` commands, allows for code to be r
 
   - Function loading:
 
-    Function loading is a secondary method of code extension that the runner performs in order to declare functions with names that are readable. By default, the `run_/prep` resource is called to prepare dependencies and this internally is done by calling `run_/unload` and `run_/load` resources. Variables `LDD`, `LDX`, `EXX`, `UDD`, and `UDX` are reserved for this process.
+    Function loading is a secondary method of code extension that the runner performs in order to declare functions with names that are readable. By default, the `run_/prep` resource is called to prepare dependencies and this internally is done by calling `run_/load` and `run_/unload` resources. Variables `LDD`, `LDX`, `EXX`, `UDD`, and `UDX` are reserved for this process.
 
 #### Command-line:
 
