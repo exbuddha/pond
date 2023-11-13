@@ -56,7 +56,7 @@ Reservation is required for correctness and specifically in the case of recursiv
 These names are reserved by the runner:
 
   - Single underscore starting character in all variable and function names is reserved.
-  - Variable names `BKP`, `BKX`, `ext`, `EXT`, `EXX`, `RCT`, `RCX`, `LDD`, `LDX`, `UDD`, `UDX`, `CAP`, `WRD`, `CHS`, `OFS`, and `SAN` are reserved in addition to the variables named above.
+  - Variable names `BKX`, `ext`, `EXT`, `EXX`, `RCT`, `RCX`, `LDD`, `LDX`, `UDD`, `UDX`, `CAP`, `WRD`, `CHS`, `OFS`, and `SAN` are reserved in addition to the variables named above.
   - Function names `main_`, `recall_`, `resource_`, `run_`, and `return_` are all reserved.
   - Variable `_64run_95_47mkdir_95_out` is a special variable evaluated by the runner after parsing the options. The runner allows this variable to be overridden by the environment before it is loaded from disk.
 
