@@ -66,7 +66,7 @@ Code extension, similar to `source` and `eval` commands, allows for code to be r
 
   - Source directory, work directory, and resourcing:
 
-    The runner recognizes and uses two directory names `SRC` and `WKD` in order to locate extended resources on disk. Source directory is set to the location of the *run* script and work directory is set to the current directory; however, both variables can be overridden by the environment as well. Every time a resource is called, the runner looks for a directory named *.rc* inside the work directory first and then the source directory. By design, the extension resource (located at `run_/@/ext`) is used to find the path for other resources on disk. As a minimum requirement, this resource must exist in either of the two directories when the runner is started.
+    The runner recognizes and uses two directory names `SRC` and `WKD` in order to locate extended resources on disk. Source directory is set to the location of the *run* script and work directory is set to the current directory; however, both variables can be overridden by the environment as well. Every time a resource is called, the runner looks for a directory named *.rc* inside the work directory first and then the source directory. By design, the extension resource (located at *run_/@/ext*) is used to find the path for other resources on disk. As a minimum requirement, this resource must exist in either of the two directories when the runner is started.
 
   - Default startup resources:
 
@@ -84,7 +84,7 @@ Code extension, similar to `source` and `eval` commands, allows for code to be r
 
 #### Command-line:
 
-The command-line (resourced at `run_/break`) is a code that reads from the keyboard and processes each key according to the resource which is bound to that key at the moment. The reserved variable `BKP` determines this resource path located inside the `/run_/@/break/binding` directory.
+The command-line (resourced at `run_/break`) is a code that reads from the keyboard and processes each key according to the resource which is bound to that key at the moment. The reserved variable `BKP` determines this resource path located inside the */run_/@/binding* directory.
 
 The command-line loops endlessly through steps 2-4 until interrupted or broken:
    1. evaluate `WRK`
