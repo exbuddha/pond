@@ -87,4 +87,4 @@ LN=
 
 trap break SIGINT
 
-[[ -z $1 ]] || "$@"
+[[ -n $1 ]] && "$@"
