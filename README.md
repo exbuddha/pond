@@ -51,7 +51,12 @@ options:
 
 #### Name Reservation:
 
-Reservation is required for correctness and specifically in the case of recursive functions. By default, name reservation is disabled. In order to enable it, set `RSV` equal to a positive integer forcing the runner to reserve all environment variables before evaluating the command. After that point, anywhere in the code where name reservation becomes a requirement again, set `RSV` equal to an array with the first element being a positive integer and the rest being the names that must be reserved going forward, then evaluate resource `run_/preset`. Once these names are reserved, `WRD` will hold the smallest string that, prepended to any variable name, will guarantee that there will be no naming collisions.
+Reservation is required for correctness and specifically in the case of recursive functions. By default, name reservation is disabled. In order to enable it, set `RSV` equal to a positive integer forcing the runner to reserve all environment variables before evaluating the command. After that point, anywhere in the code where name reservation becomes a requirement again, set `RSV` equal to an array with the first element being a positive integer and the rest being the names that must be reserved going forward, then evaluate resource `run_/preset`. Once these names are reserved, `WRD` will hold the smallest string that, prepended to any variable name, will guarantee that there will be no naming collisions. For convenience, by calling this resource `WRD` is added to the list of local arguments, as `$1`. Source code can then be generated and evaluated securely:
+
+    local -a VARNAMES=(list of reserved variable names)
+    local -a RSV=(1 "${VARNAMES[@]}")
+    eval "$(resource_ run_/preset)"
+    eval "shift; local ${1}protected_name; ..."
 
 These names are reserved by the runner:
 
@@ -72,7 +77,7 @@ Code extension, similar to `source` and `eval` commands, allows for code to be r
 
     In addition to the extension resource mentioned above, three other resources are used by the runner but they are not all required. The two required resources are called `run_/parse_opts` and `run_/mkdir_out`. The optional resource is called `run_/prep`. As a minimum requirement, after these resources are evaluated successfully, the runner expects functions `run_` and `return_` to be declared or exits with code 2.
 
-    Two special resources are used by the extension mechanism and are both essential parts of the runner. These resources are named `run_/reserve` and `run_/preset`.
+    Two special resources are used by the reservation mechanism and are both essential parts of the runner. These resources are named `run_/reserve` and `run_/preset`. They are required only when name reservation is used.
 
   - `recall_` and `resource_` functions:
 
