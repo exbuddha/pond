@@ -6,4 +6,4 @@ To work in dev mode:
 
   - Evaluate `break [F8]` to stop command line and signal process
 
-  - Develop `signal` to create your plug-in
+  - Develop `signal` and `task` to create your plug-in

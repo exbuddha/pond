@@ -1,0 +1,4 @@
+if [[ $SLEEP == */* ]]; then
+    SLEEP="$(<$SLEEP)"
+fi
+sleep $SLEEP||sleep 1

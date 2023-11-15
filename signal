@@ -1,11 +1,7 @@
 [[ -z $SIGPID ]] || kill $SIGPID 2>/dev/null
-SLEEP="${SLEEP:-1}"
-if [[ $SLEEP == */* ]]; then
-    SIGWRK='sleep $(<$SLEEP)||sleep 1'
-else
-    SIGWRK="${SIGWRK:-sleep \$SLEEP||sleep 1}"
-fi
+SIGWRK="${SIGWRK:-. \"\$SRC\"/task}"
 SIG="${SIG:-SIGUSR1}"
+SLEEP=1
 COLOR="${COLOR:-1}"
 STATUS='ipclock'
 
