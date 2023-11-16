@@ -1,4 +1,2 @@
-if [[ $SLEEP == */* ]]; then
-    SLEEP="$(<$SLEEP)"
-fi
-sleep $SLEEP||sleep 1
+[[ $SLEEP == */* ]] && SLEEP="$(<$SLEEP)"
+sleep $SLEEP || sleep 1
