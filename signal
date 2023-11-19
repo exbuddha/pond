@@ -1,7 +1,8 @@
 [[ -z $SIGPID ]] || kill $SIGPID 2>/dev/null
 
 THREAD="$WKD/.th"
-SIGWRK="${SIGWRK:-. \"\$SRC/task\"}"
+[[ -n $SIGWRK ]] || \
+SIGWRK='if [[ -e ${WKD%/}/task ]];then . "${WKD%/}/task";elif [[ ${SRC%/} != ${WKD%/}&&-e ${SRC%/}/task ]];then . "${SRC%/}/task";fi'
 SIG="${SIG:-SIGUSR1}"
 HEAD="${HEAD:-}"
 SLEEP="${SLEEP:-1}"
