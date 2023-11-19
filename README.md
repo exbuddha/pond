@@ -10,13 +10,11 @@
 
   - **[Command-line process]** Every time the command line process is interrupted, it immediately looks for `.update` file inside the current directory and sources it. If the file does not exist, `refresh_()` is called. The process then continues from where it was interrupted. Console update tasks must be performed in this process. `BKPID` contains the command-line process number.
 
-  - **[Signal process]** After each interruption, the signal process looks for `.head` file located inside the current directory, then sources and deletes it only on success, after making an incremental copy of it inside *.th/pid/date* sub-directory of the work directory. If the file does not exist, the process sleeps for `SLEEP` seconds (default: `1`). This logic is repeated by evaluating `SIGWRK` that sources the *task* script by default. Asynchronous tasks are performed in this process. `SIGPID` contains the signal process number, `SIGTS` contains the process date, and `HEAD` holds the latest sourced task number.
+  - **[Signal process]** After each interruption, the signal process looks for `.head` file inside the current directory, then sources and deletes it only on success, after making an incremental copy of it inside *.th/pid/date* sub-directory of the work directory. If the file does not exist, the process sleeps for `SLEEP` seconds (default: `1`). This logic is repeated by evaluating `SIGWRK` that sources the *task* script by default. Asynchronous tasks are performed in this process. `SIGPID` contains the signal process number, `SIGTS` contains the process date, and `HEAD` holds the latest sourced task number.
 
-  - Set `SLEEP` equal to a file path in order to have its content be used as sleep amount at every iteration of the signal process when `.head` file is not located.
+  - Optionally before starting the runner, set `SLEEP` equal to a file path in order to have its content be used as sleep amount at every iteration of the signal process when `.head` file is not found.
 
-  - Before stopping at the prompt or reading a new byte from the keyboard, `PSTWRK` is evaluated.
-
-  - After reading a new byte from the keyboard, `WRK` is evaluated. Then, that byte is processed for a key press event unless `BKZ` is set to `0`.
+  - Before stopping at the prompt or reading a new byte from keyboard, `PSTWRK` is evaluated. After reading a new byte from keyboard, `WRK` is evaluated. Then, that byte is processed for a key press event unless `BKZ` is set to `0`. Both variables are cleared before running the terminal command and stopping at the prompt. `BKP` is also cleared in order to safely start the command line prompt with the correct keybinding path. Therefore, these variables must be set either in the terminal command or `.cmd` file.
 
   - Evaluate `break` to stop command line and signal process.
 
