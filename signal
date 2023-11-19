@@ -1,29 +1,36 @@
 [[ -z $SIGPID ]] || kill $SIGPID 2>/dev/null
-SIGWRK="${SIGWRK:-. \"\$SRC\"/task}"
-SIG="${SIG:-SIGUSR1}"
-SLEEP=1
-COLOR="${COLOR:-1}"
-STATUS='ipclock'
 
-type -t update >/dev/null || \
-update() {
-    refresh
+THREAD="$WKD/.th"
+SIGWRK="${SIGWRK:-. \"\$SRC/task\"}"
+SIG="${SIG:-SIGUSR1}"
+HEAD="${HEAD:-}"
+SLEEP="${SLEEP:-1}"
+COLOR="${COLOR:-1}"
+STATUS='ipclock_'
+
+type -t update_ >/dev/null || \
+update_() {
+    if [[ -e .update ]]; then
+        . .update
+    else
+        refresh_
+    fi
 }
 
-type -t refresh >/dev/null || \
-refresh() {
+type -t refresh_ >/dev/null || \
+refresh_() {
     [[ $((REF++)) -ne 0 ]] || {
-        type -t "$STATUS" >/dev/null && MSG="$("$STATUS" 2>/dev/null)"
-        [[ -z ${MSG+1} ]] || {
-            local -i x="$(($(tput cols)-${#MSG}-4))"
+        type -t "$STATUS" >/dev/null && set -- "$("$STATUS" 2>/dev/null)"
+        [[ -z ${1+1} ]] || {
+            local -i x="$(($(tput cols)-${#1}-4))"
             tput -S <<!
 sc
 cup 0 $x
 !
             if [[ COLOR -eq 0 ]] 2>/dev/null; then
-                echo -n '[ '"$MSG"' ]'
+                echo -n "[ $1 ]"
             else
-                echo -n -e '\033[0;33m[ '"$MSG"' ]\033[0m'
+                echo -n -e '\033[0;33m[ '"$1"' ]\033[0m'
             fi
             tput rc
         }
@@ -31,7 +38,7 @@ cup 0 $x
     }
 }
 
-ipclock() {
+ipclock_() {
     local ip
     if [[ $OSTYPE == darwin* ]]; then
         ip="$(ipconfig getifaddr en0 2>/dev/null)"
@@ -43,7 +50,7 @@ ipclock() {
     [[ -z $clk ]] || { [[ -z "$ip" ]] || printf ' - '; printf "$clk"; }
 }
 
-subpid() {
+subpid_() {
     local -a ln
     IFS=$'\n' read -d '' -ra ln <<< "$(ps -f | grep "$0")"
     local -i i=1
@@ -53,34 +60,47 @@ subpid() {
     done
 }
 
-[[ $SIG != 0 ]] && trap update $SIG && {
+[[ RSV -le 0 ]] || \
+eval "$(recall_ run_/reserve)" BKPID COLOR HEAD LN PSTKB164 PSTKB167 PSTLN PSTWRK REF SIGPID SIGTS SIGUSR SIGWRK STATUS THREAD
+
+if [[ $SIG != 0 ]]; then
+    rm .head 2>/dev/null
+    rm .update 2>/dev/null
+
+    trap update_ $SIG
     if [[ COLOR -eq 0 ]] 2>/dev/null; then
         echo 'Starting new signal process'
     else
         echo -e '\033[0;33mStarting new signal process\033[0m'
     fi
-    SIGPID="$(subpid)"
+    SIGTS="$(date +%y%m%d%H%M%S 2>/dev/null)"
+    SIGPID="$(subpid_)"
     (
         BKPID="$$"
         for ((;;)) do
-            [[ -z $SIG ]] || kill -"${SIG#-}" "$BKPID"
+            [[ -n $SIG ]] && ps "$BKPID" >/dev/null && kill -"${SIG#-}" "$BKPID"
             eval "$SIGWRK"
         done &
     ) 2>/dev/null
-    SIGPID="$(subpid "$SIGPID" | awk '{printf $1}')"
+    SIGPID="$(subpid_ "$SIGPID" | awk '{printf $1}')"
     PST=(PST[1] 'kill $SIGPID 2>/dev/null')
     PRE=(PRE[1] 'PST=(PST[1] '\''PST=("${PST[@]:2}")'\'' "${PST[@]}")')
-}
+fi
 
 WRK=
-PSTWRK='[[ $((++FRM%WKS)) -ne 0 ]]||refresh'
-FRM=-1
-WKS=12
-PSTKB164='refresh;LN=1'
-PSTKB167='refresh;LN='
-PSTLN='[[ LN -eq 0 ]]||refresh'
+PSTWRK=
+BKP=
+PSTKB164='refresh_;LN=1'
+PSTKB167='refresh_;LN='
+PSTLN='[[ LN -eq 0 ]]||refresh_'
 LN=
 
 trap break SIGINT
 
-[[ -n $1 ]] && "$@"
+if [[ $# -gt 0 ]]; then
+    return_ "$BKR"
+    "$@"
+elif [[ -e .cmd ]]; then
+    return_ "$BKR"
+    . .cmd
+fi

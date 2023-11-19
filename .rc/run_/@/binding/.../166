@@ -1,0 +1,1 @@
+eval "$BKW"'BUF=$'\''\n'\'' eval "$(resource_ run_/line/insert)"'
