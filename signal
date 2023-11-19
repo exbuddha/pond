@@ -60,10 +60,10 @@ subpid_() {
     done
 }
 
-[[ RSV -le 0 ]] || \
+[[ RSV -le 0 ]] 2>/dev/null || \
 eval "$(recall_ run_/reserve)" BKPID COLOR HEAD LN PSTKB164 PSTKB167 PSTLN PSTWRK REF SIGPID SIGTS SIGUSR SIGWRK STATUS THREAD
 
-if [[ $SIG != 0 ]]; then
+[[ $SIG != 0 ]] && {
     rm .head 2>/dev/null
     rm .update 2>/dev/null
 
@@ -85,7 +85,7 @@ if [[ $SIG != 0 ]]; then
     SIGPID="$(subpid_ "$SIGPID" | awk '{printf $1}')"
     PST=(PST[1] 'kill $SIGPID 2>/dev/null')
     PRE=(PRE[1] 'PST=(PST[1] '\''PST=("${PST[@]:2}")'\'' "${PST[@]}")')
-fi
+}
 
 WRK=
 PSTWRK=
