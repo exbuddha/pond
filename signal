@@ -1,10 +1,10 @@
 [[ -z $SIGPID ]] || kill $SIGPID 2>/dev/null
 
 THREAD="$WKD/.th"
+TRACE="${TRACE:-1}"
 [[ -n $SIGWRK ]] || \
 SIGWRK='if [[ -e ${WKD%/}/task ]];then . "${WKD%/}/task";elif [[ ${SRC%/} != ${WKD%/}&&-e ${SRC%/}/task ]];then . "${SRC%/}/task";fi'
 SIG="${SIG:-SIGUSR1}"
-HEAD="${HEAD:-}"
 SLEEP="${SLEEP:-1}"
 COLOR="${COLOR:-1}"
 STATUS='ipclock_'
@@ -62,7 +62,7 @@ subpid_() {
 }
 
 [[ RSV -le 0 ]] 2>/dev/null || \
-eval "$(recall_ run_/reserve)" BKPID COLOR HEAD LN PSTKB164 PSTKB167 PSTLN PSTWRK REF SIGPID SIGTS SIGUSR SIGWRK STATUS THREAD
+eval "$(recall_ run_/reserve)" BKPID COLOR HEAD LN PSTKB164 PSTKB167 PSTLN PSTWRK REF SIGPID SIGTS SIGUSR SIGWRK STATUS THREAD TRACE
 
 [[ $SIG != 0 ]] && {
     rm .head 2>/dev/null
