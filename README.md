@@ -28,6 +28,8 @@
 
   - **Reserved variables:** `BKPID`, `COLOR`, `HEAD`, `LN`, `PSTKB164`, `PSTKB167`, `PSTLN`, `PSTWRK`, `REF`, `SIGPID`, `SIGTS`, `SIGUSR`, `SIGWRK`, `STATUS`, `THREAD`, `TRACE`
 
+  - **Reserved functions:** `refresh_`, `update_`, `subpid_`, `ipclock_`
+
 ### Example:
 
 Evaluating this command in terminal prints `HEAD` in console __asynchronously__ until it is greater than `9` and stops:
