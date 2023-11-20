@@ -14,7 +14,7 @@
 
   - Optionally before starting the runner, set `SLEEP` equal to a file path in order to have its content be used as sleep amount at every iteration of the signal process when `.head` file is not found.
 
-  - Before stopping at the prompt or reading a new byte from keyboard, `PSTWRK` is evaluated. After reading a new byte from keyboard, `WRK` is evaluated. Then, that byte is processed for a key press event unless `BKZ` is set to `0`. Both variables are cleared before running the terminal command and stopping at the prompt. `BKP` is also cleared in order to safely start the command line prompt with the correct keybinding path. Therefore, these variables must be set either in the terminal command or `.cmd` file.
+  - Before stopping at the prompt or reading a new byte from keyboard, `PSTWRK` is evaluated. After reading a new byte from keyboard, `WRK` is evaluated. Then, that byte is processed for a key press event if `BKZ` is equal to `0`. Both variables are cleared before running the terminal command and stopping at the prompt. `BKP` is also cleared in order to safely start the command line prompt with the correct keybinding path. Therefore, these variables must be set either in the terminal command or `.cmd` file.
 
   - Evaluate `break` to stop command line and signal process.
 
