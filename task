@@ -1,7 +1,7 @@
 if [[ -e .head ]]; then
     mkdir -p "$THREAD/$$/$SIGTS"
     cp -p .head "$THREAD/$$/$SIGTS/$((++HEAD))"
-    . .head && rm .head 2>/dev/null
+    . .head && rm .head
 else
     [[ $SLEEP == */* ]] && SLEEP="$(<$SLEEP)"
     sleep $SLEEP || sleep 1
