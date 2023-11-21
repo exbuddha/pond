@@ -1,9 +1,10 @@
-[[ -z $SIGPID ]] || kill $SIGPID 2>/dev/null
+[[ -z $SIGPID || $(realpath "$(awk '{printf $2}' <<< "$(ps -o args= "$SIGPID")")") != $(realpath "$0") ]] || \
+kill $SIGPID 2>/dev/null
 
 THREAD="$WKD/.th"
 TRACE="${TRACE:-1}"
 [[ -n $SIGWRK ]] || \
-SIGWRK='if [[ -e ${WKD%/}/task ]];then . "${WKD%/}/task";elif [[ ${SRC%/} != ${WKD%/}&&-e ${SRC%/}/task ]];then . "${SRC%/}/task";fi'
+SIGWRK='if [[ -e ${WKD%/}/task ]];then . "${WKD%/}/task";elif [[ ${SRC%/} != ${WKD%/}&&-e ${SRC%/}/task ]];then . "${SRC%/}/task";else exit 2;fi'
 SIG="${SIG:-SIGUSR1}"
 SLEEP="${SLEEP:-1}"
 COLOR="${COLOR:-1}"
@@ -53,11 +54,11 @@ ipclock_() {
 
 subpid_() {
     local -a ln
-    IFS=$'\n' read -d '' -ra ln <<< "$(ps -f | grep "$0")"
+    IFS=$'\n' read -d '' -ra ln <<< "$(ps -o args= -o pid= | grep "$0")"
     local -i i=1
     for ((;i<${#ln[@]};i++)) do
-        local pid="$(awk '{printf $2}' <<< "${ln[i]}")"
-        [[ $pid == $$ || $(awk '{printf $8}' <<< "${ln[i]}") == grep || " $* " == *" $pid "* ]] || echo -n " $pid"
+        local pid="$(awk '{printf $NF}' <<< "${ln[i]}")"
+        [[ $pid == $$ || ${ln[i]} == grep\ * || " $* " == *" $pid "* ]] || echo -n " $pid"
     done
 }
 
