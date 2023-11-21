@@ -58,6 +58,11 @@ local -a VARNAMES=(list of reserved variable names)
 local -a RSV=(1 "${VARNAMES[@]}")
 eval "$(resource_ run_/preset)"
 eval "shift; local ${1}protected_name; ..."
+
+# or, avoid changing local arguments and reserve names directly
+
+eval "$(recall_ run_/reserve)" "${VARNAMES[@]}"
+eval "local ${WRD}protected_name; ..."
 ```
 
 These names are reserved by the runner:
