@@ -86,15 +86,59 @@ Code extension, similar to `source` and `eval` commands, allows for code to be r
 
     Two special resources are used by the reservation mechanism and are both essential parts of the runner. These resources are named `run_/reserve` and `run_/preset`. They are required only when name reservation is used.
 
-    **IMPORTANT:** Required resources `run_/parse_opts` and `run_/mkdir_out` are both evaluated **twice**; first by the runner and then again by the `run_` function. They must contain code that safely accomodates one or more repetitions. In some cases when the runner is started in mode 1 or 2, the reserved variables `WAIT` or `RESET` must either change `MODE` or their own value based on runtime criteria when they are evaluated.
+    **IMPORTANT:** Required resources `run_/parse_opts` and `run_/mkdir_out` are both evaluated **twice**; first by the runner and then again by the `run_` function. They must contain code that safely accommodates one or more repetitions. In some cases when the runner is started in mode 1 or 2, the reserved variables `WAIT` or `RESET` must either change `MODE` or their own value based on runtime criteria when they are evaluated.
 
   - `recall_` and `resource_` functions:
 
-    These functions comprise the backbone of the runner and carry out the code extension logic. Variables `EXT`, `EXX`, `RCT`, and `RCX` are reserved by these two functions.
+    These functions comprise the backbone of the runner and carry out the code extension logic. Variables `ext`, `EXT`, `EXX`, `RCT`, and `RCX` are reserved by these two functions.
+
+    Every time an extension is resourced, the extension lookup logic uses `EXT` to find that resource and set `ext` equal to its location if it is found; otherwise, `EXX` is evaluated. By convention, the code contained in `EXX` must make the extended resource available on disk and then set `ext` equal to its path. Variables `RCX` and `RCT` are then used to resolve errors during and after loading the resource file. `RCX` is evaluated if `cat` command is unable to access the file. `RCT` is evaluated as a test command prior to calling the resource.
+
+    ```bash
+    EXT=run_/load \
+    EXX='download $EXT' \
+    RCX='return_ 3' \
+    RCT='return_' \
+    eval "$(recall_)" func args ...
+
+    if [[ $? -eq 3 ]]; then
+    
+        # failed to load run_/load resource
+    
+    fi
+    ```
+
+    **IMPORTANT:** The first `/` character is trimmed from `EXT` before it is processed for lookup.
+      * Use `internal/file` for internal resources located inside *.rc* directory
+      * Use `/relative/path/file` for resources with relative paths
+      * Use `//root/path/file` for resources with full paths
+      * Network paths are not supported
 
   - Function loading:
 
-    Function loading is a secondary method of code extension that the runner performs in order to declare functions with names that are readable. By default, the `run_/prep` resource is called to prepare dependencies and this internally is done by calling `run_/load` and `run_/unload` resources. Variables `LDD`, `LDX`, `EXX`, `UDD`, and `UDX` are reserved for this process.
+    Function loading is a secondary method of code extension that the runner performs in order to declare functions with names that are readable. By default, the optional `run_/prep` resource is called to prepare dependencies and this internally is done by calling `run_/load` and `run_/unload` resources. Variables `LDD`, `LDX`, `EXX`, `UDD`, and `UDX` are reserved for this process.
+
+    The reserved variable `EXX` serves a similar role as in `recall_` and `resource_` functions except that it also allows to return with an error code. Variables `LDX` and `UDX` work similarly to `RCX` mentioned above.
+
+    ```bash
+    EXX='return 4' \
+    LDX='return 5' \
+    eval "$(EXX= RCX='return_ 3' RCT='return_' recall_ run_/load)" func args ...
+
+    case $? in
+    3)
+        # failed to load run_/load resource
+        ;;
+    4)
+        # function resource was not found
+        ;;
+    5)
+        # failed to load function resource
+        ;;
+    esac
+    ```
+
+    **NOTE:** `EXX` has overlapping usages in both resource extension and function loading procedures and must be set appropriately.
 
 #### Command-line:
 
