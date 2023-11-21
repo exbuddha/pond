@@ -86,6 +86,8 @@ Code extension, similar to `source` and `eval` commands, allows for code to be r
 
     Two special resources are used by the reservation mechanism and are both essential parts of the runner. These resources are named `run_/reserve` and `run_/preset`. They are required only when name reservation is used.
 
+    **IMPORTANT:** Required resources `run_/parse_opts` and `run_/mkdir_out` are both evaluated **twice**; first by the runner and then again by the `run_` function. They must contain code that safely accomodates one or more repetitions. In some cases when the runner is started in mode 1 or 2, the reserved variables `WAIT` or `RESET` must either change `MODE` or their own value based on runtime criteria when they are evaluated.
+
   - `recall_` and `resource_` functions:
 
     These functions comprise the backbone of the runner and carry out the code extension logic. Variables `EXT`, `EXX`, `RCT`, and `RCX` are reserved by these two functions.
