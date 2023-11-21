@@ -34,15 +34,17 @@
 
 Evaluating this command in terminal prints `HEAD` in console __asynchronously__ until it is greater than `9` and stops:
 
-    ./run eval "echo 'echo \$HEAD; [[ HEAD -gt 9 ]]' > .head"
-    Starting new signal process
-    1
-    2
-    3
-    4
-    5
-    6
-    7
-    8
-    9
-    10
+```bash
+./run eval "echo 'echo \$HEAD; [[ HEAD -gt 9 ]]' > .head"
+Starting new signal process
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+```
