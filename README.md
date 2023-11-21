@@ -26,7 +26,7 @@
 
   - Press `F5` to refresh the screen.
 
-  - **Reserved variables:** `BKPID`, `COLOR`, `HEAD`, `LN`, `PSTKB164`, `PSTKB167`, `PSTLN`, `PSTWRK`, `REF`, `SIGPID`, `SIGTS`, `SIGUSR`, `SIGWRK`, `STATUS`, `THREAD`, `TRACE`
+  - **Reserved variables:** `BKPID`, `COLOR`, `HEAD`, `LN`, `PSTKB164`, `PSTKB167`, `PSTLN`, `PSTWRK`, `REF`, `SIG`, `SIGPID`, `SIGTS`, `SIGUSR`, `SIGWRK`, `STATUS`, `THREAD`, `TRACE`
 
   - **Reserved functions:** `refresh_`, `update_`, `subpid_`, `ipclock_`
 
