@@ -12,15 +12,17 @@
 
   - **[Signal process]** After each interruption, the signal process looks for `.head` file inside the current directory, then sources and deletes it only on success, after making an incremental copy of it inside *.th/pid/date* sub-directory of the work directory unless `TRACE` is equal to `0`. If the file does not exist, the process sleeps for `SLEEP` seconds (default: `1`). This logic is repeated by evaluating `SIGWRK` that sources the *task* script or exits with code 2 if it is not found in the work or the source directory. Asynchronous tasks are performed in this process. `SIGPID` contains the signal process number, `SIGTS` contains the process date, and `HEAD` holds the latest sourced task number.
 
-    **WARNING:** `SIGPID` contains more than just the signal process number. This is due to an anomaly in the `subpid_` function, where other sub-process numbers are also included in the result due to having matching process command strings in the output of the `ps` command. There is a slight possibility that this may cause security hazards by mismatching an old value with a newly started sub-process number and terminating it by accident. There are ways to get around the problem and it requires keeping an up-to-date list of sub-processes as they are started in code. Work on this issue is under review.
+    **WARNING:** `SIGPID` contains more than just the signal process number. This is due to an anomaly in the `subpid_` function, where other sub-process numbers are also included in the result due to having matching command strings in the output of `ps` command. There is a slight possibility that this may cause security hazards by mismatching an old value with a newly started sub-process number and terminating it by accident. There are solutions to the problem and they require keeping an up-to-date list of sub-processes as they are started in code. Work on this issue is under review.
+
+  - Every time the *signal* script is sourced from the command-line, it takes the previous `SIGPID` values and attempts to terminate any process that was issued by a matching command string. In order to start a new signal process without terminating any of the previous ones clear or unset `SIGPID` and optionally set `SIG` equal to an unused signal string prior to sourcing the script again.
 
   - Optionally before starting the runner, set `SLEEP` equal to a file path in order to have its content be used as sleep amount at every iteration of the signal process when `.head` file is not found.
 
   - Before stopping at the prompt or reading a new byte from keyboard, `PSTWRK` is evaluated. After reading a new byte from keyboard, `WRK` is evaluated. Then, that byte is processed for a key press event if `BKZ` is equal to `0`. Both variables are cleared before running the terminal command and stopping at the prompt. `BKP` is also cleared in order to safely start the command prompt with the correct keybinding path. Therefore, these variables must be set either in the terminal command or `.cmd` file.
 
-  - Evaluate `break` to stop command line and signal process.
+  - Evaluate `break` to stop command line and all signal processes.
 
-    **WARNING:** Occasionally when multiple signal processes are started from command-line process, the `kill` command will skip a signal sub-process when breaking out of the command prompt. The bug may be caused by the order that this command issues the termination signal to each sub-process or it may have other reasons. The best way around the problem is to always check for any orphaned process after exiting the command-line process and to terminate each one.
+    **WARNING:** Occasionally when multiple signal processes are started, `kill` command will skip a signal sub-process when breaking out of the command prompt. The bug may be caused by the order that this command issues the termination signal to each sub-process or it may have other reasons. The best way around the problem is to always check for any orphaned process after exiting the command-line process and to terminate each one.
 
   - Press `F8` to evaluate the command line.
 
