@@ -69,11 +69,19 @@ ipclock_() {
 
 subpid_() {
     local -a ln
-    IFS=$'\n' read -d '' -ra ln <<< "$(ps -o args= -o pid= | grep "$0")"
-    local -i i=1
-    for l in "${ln[@]}"; do
-        local pid="$(awk '{printf $NF}' <<< "$l")"
-        [[ $pid == $$ || $l == grep\ * || " $* " == *" $pid "* ]] || echo -n " $pid"
+    IFS=$'\n' read -d '' -ra ln <<< "$(ps -o args= -o pid= | grep "$0" | awk '{print $NF}')"
+    local pid
+    local -a diff
+    for pid in "${ln[@]}"; do
+        [[ $pid == $$ || " $* " == *" $pid "* ]] || diff+=("$pid")
+    done
+    IFS=$'\n' read -d '' -ra ln <<< "$(ps -o args= -o pid= | grep "$0" | awk '{print $NF}')"
+    local ref
+    for pid in "${ln[@]}"; do
+        ref="$ref $pid"
+    done
+    for pid in "${diff[@]}"; do
+        [[ " $ref " == *" $pid "* ]] && echo -n "$pid "
     done
 }
 
@@ -91,7 +99,7 @@ eval "$(recall_ run_/reserve)" BKPID COLOR HEAD LN PSTKB164 PSTKB167 PSTLN PSTWR
         echo -e '\033[0;33mStarting new signal process\033[0m'
     fi
     SIGTS="$(date +%y%m%d%H%M%S 2>/dev/null)"
-    SIGPID="$(subpid_)"
+    SIGPID="$(subpid_ "$(subpid_)")"
     (
         BKPID="$$"
         for ((;;)) do
@@ -100,7 +108,7 @@ eval "$(recall_ run_/reserve)" BKPID COLOR HEAD LN PSTKB164 PSTKB167 PSTLN PSTWR
         done &
     ) 2>/dev/null
     SIGPID="$(subpid_ "$SIGPID")$SIGPID"
-    PST=(PST[1] "kill_signal_$SIGPID")
+    PST=(PST[1] "kill_signal_ $SIGPID")
     PRE=(PRE[1] 'PST=(PST[1] '\''PST=("${PST[@]:2}")'\'' "${PST[@]}")')
 }
 
