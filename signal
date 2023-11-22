@@ -71,9 +71,9 @@ subpid_() {
     local -a ln
     IFS=$'\n' read -d '' -ra ln <<< "$(ps -o args= -o pid= | grep "$0")"
     local -i i=1
-    for ((; i < ${#ln[@]}; i++)) do
-        local pid="$(awk '{printf $NF}' <<< "${ln[i]}")"
-        [[ $pid == $$ || ${ln[i]} == grep\ * || " $* " == *" $pid "* ]] || echo -n " $pid"
+    for l in "${ln[@]}"; do
+        local pid="$(awk '{printf $NF}' <<< "$l")"
+        [[ $pid == $$ || $l == grep\ * || " $* " == *" $pid "* ]] || echo -n " $pid"
     done
 }
 
