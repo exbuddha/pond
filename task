@@ -5,6 +5,7 @@ if [[ -e .head ]]; then
     }
     . .head && rm .head
 else
+    . .setup
     [[ $SLEEP == */* ]] && SLEEP="$(<$SLEEP)"
     sleep $SLEEP || sleep 1
 fi
