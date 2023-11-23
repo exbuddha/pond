@@ -96,7 +96,6 @@ eval "$(recall_ run_/reserve)" BKPID COLOR HEAD LN PSTKB164 PSTKB167 PSTLN PSTWR
         echo -e '\033[0;33mStarting new signal process\033[0m'
     fi
     SIGTS="$(date +%y%m%d%H%M%S 2>/dev/null)"
-    SIGPID="$(subpid_ "$(subpid_)")"
     (
         BKPID="$$"
         for ((;;)) do
@@ -104,7 +103,7 @@ eval "$(recall_ run_/reserve)" BKPID COLOR HEAD LN PSTKB164 PSTKB167 PSTLN PSTWR
             eval "$SIGWRK"
         done &
     ) 2>/dev/null
-    SIGPID="$(subpid_)$SIGPID"
+    SIGPID="$(subpid_)"
     PST=(PST[1] "kill_signal_$SIGPID")
     PRE=(PRE[1] 'PST=(PST[1] '\''PST=("${PST[@]:2}")'\'' "${PST[@]}")')
 }
