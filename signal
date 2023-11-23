@@ -68,21 +68,17 @@ ipclock_() {
 }
 
 subpid_() {
-    local -a ln
-    IFS=$'\n' read -d '' -ra ln <<< "$(ps -o args= -o pid= | grep "$0" | awk '{print $NF}')"
+    local ln="$(ps_subpids_)"
+    local ref=" $(echo $(ps_subpids_)) "
+    set -- " $* "
     local pid
-    local -a diff
-    for pid in "${ln[@]}"; do
-        [[ $pid == $$ || " $* " == *" $pid "* ]] || diff+=("$pid")
+    for pid in ${ln[@]}; do
+        [[ $pid == $$ || $ref != *" $pid "* || $1 == *" $pid "* ]] || echo -n " $pid"
     done
-    IFS=$'\n' read -d '' -ra ln <<< "$(ps -o args= -o pid= | grep "$0" | awk '{print $NF}')"
-    local ref
-    for pid in "${ln[@]}"; do
-        ref="$ref $pid"
-    done
-    for pid in "${diff[@]}"; do
-        [[ " $ref " == *" $pid "* ]] && echo -n "$pid "
-    done
+}
+
+ps_subpids_() {
+    ps -o args= -o pid= | grep "$0" | awk '{print $NF}'
 }
 
 [[ RSV -le 0 ]] 2>/dev/null || \

@@ -36,7 +36,7 @@
 
   - **Reserved variables:** `PRE`, `PST`, `SLEEP`, `BKPID`, `COLOR`, `HEAD`, `LN`, `PSTKB164`, `PSTKB167`, `PSTLN`, `PSTWRK`, `REF`, `SIG`, `SIGPID`, `SIGTS`, `SIGUSR`, `SIGWRK`, `STATUS`, `STLN`, `STREF`, `THREAD`, `TRACE`
 
-  - **Reserved functions:** `update_`, `kill_signal_`, `subpid_`, `refresh_`, `refresh_status_`, `ipclock_`
+  - **Reserved functions:** `kill_signal_`, `subpid_`, `ps_subpids_`, `update_`, `refresh_`, `refresh_status_`, `ipclock_`
 
 ### Example:
 
