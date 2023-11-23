@@ -7,9 +7,12 @@
 options:
 
     -m|--mode m    run mode
+
                      [0]    starts immediately
+
                        1    periodically evaluates WAIT,
                             if empty sleeps for SLEEP amount
+
                        2    periodically evaluates RESET,
                             on success repeats mode 1 once,
                             if empty creates OUT directory,
