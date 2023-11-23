@@ -108,12 +108,6 @@ Code extension, similar to `source` and `eval` commands, allows for code to be r
     fi
     ```
 
-    **IMPORTANT:** The first `/` character is trimmed from `EXT` before it is processed for lookup.
-      * Use `internal/file` for internal resources located inside *.rc* directory
-      * Use `/relative/path/file` for resources with relative paths
-      * Use `//root/path/file` for resources with full paths
-      * Network paths are not supported
-
   - Function loading:
 
     Function loading is a secondary method of code extension that the runner performs in order to declare functions with names that are readable. By default, the optional `run_/prep` resource is called to prepare dependencies and this internally is done by calling `run_/load` and `run_/unload` resources. Variables `LDD`, `LDX`, `EXX`, `UDD`, and `UDX` are reserved for this process.
@@ -139,6 +133,18 @@ Code extension, similar to `source` and `eval` commands, allows for code to be r
     ```
 
     **NOTE:** `EXX` has overlapping usages in both resource extension and function loading procedures and must be set appropriately.
+
+    **IMPORTANT:** The first `/` character is trimmed from `EXT` before it is processed for lookup.
+      * Use `internal/file` for internal resources located inside *.rc* directory (enabled in resource extension only)
+      * Use `/relative/path/file` for resources with relative paths (enabled in function loading only)
+        ```bash
+        # LDD is an alias for EXT
+        PATH=/relpath/to/file \
+        LDD=PATH \
+        eval "$(recall_ run_/load)" name args ...
+        ```
+      * Use `//root/path/file` for resources with full paths
+      * Network paths are not supported
 
 #### Command-line:
 
