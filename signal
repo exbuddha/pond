@@ -73,7 +73,8 @@ subpid_() {
     set -- " $* "
     local pid
     for pid in ${ln[@]}; do
-        [[ $pid == $$ || $ref != *" $pid "* || $1 == *" $pid "* ]] || echo -n " $pid"
+        pid=" $pid "
+        [[ $pid -eq $$ || $ref != *$pid* || $1 == *$pid* ]] || echo -n "$pid"
     done
 }
 
@@ -103,8 +104,8 @@ eval "$(recall_ run_/reserve)" BKPID COLOR HEAD LN PSTKB164 PSTKB167 PSTLN PSTWR
             eval "$SIGWRK"
         done &
     ) 2>/dev/null
-    SIGPID="$(subpid_ "$SIGPID")$SIGPID"
-    PST=(PST[1] "kill_signal_ $SIGPID")
+    SIGPID="$(subpid_)$SIGPID"
+    PST=(PST[1] "kill_signal_$SIGPID")
     PRE=(PRE[1] 'PST=(PST[1] '\''PST=("${PST[@]:2}")'\'' "${PST[@]}")')
 }
 
