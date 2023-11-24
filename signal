@@ -80,11 +80,10 @@ timestamp_() {
 subpid_() {
     local ln="$(ps_subpids_)"
     local ref=" $(echo $(ps_subpids_)) "
-    set -- " $* "
     local pid
     for pid in ${ln[@]}; do
         pid=" $pid "
-        [[ $pid -eq $$ || $ref != *$pid* || $1 == *$pid* ]] || echo -n "$pid"
+        [[ $ref != *$pid* || $pid -eq $$ ]] || echo -n "$pid"
     done
 }
 
