@@ -58,10 +58,10 @@ cup 0 $x
 ipclock_() {
     local ip
     if [[ $OSTYPE == darwin* ]]; then
-        ip="$(ipconfig getifaddr en0 2>/dev/null)"
+        ip="$(ipconfig getifaddr en0)"
     else
-        ip="$(hostname -I 2>/dev/null | cut -d' ' -f1)"
-    fi
+        ip="$(hostname -I | cut -d' ' -f1)"
+    fi 2>/dev/null
     [[ -z $ip ]] || printf "$ip"
     local clk="$(date +%H:%M:%S 2>/dev/null)"
     [[ -z $clk ]] || { [[ -z "$ip" ]] || printf ' - '; printf "$clk"; }
@@ -95,7 +95,11 @@ eval "$(recall_ run_/reserve)" BKPID COLOR HEAD LN PSTKB164 PSTKB167 PSTLN PSTWR
     else
         echo -e '\033[0;33mStarting new signal process\033[0m'
     fi
-    SIGTS="$(date +%y%m%d%H%M%S 2>/dev/null)"
+    if [[ $OSTYPE == darwin* ]]; then
+        SIGTS="$(gdate +%y%m%d%H%M%S.%N || date +%y%m%d%H%M%S)"
+    else
+        SIGTS="$(date +%y%m%d%H%M%S.%N)"
+    fi 2>/dev/null
     (
         BKPID="$$"
         for ((;;)) do
