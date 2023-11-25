@@ -15,7 +15,7 @@ kill_signal_() {
 }
 
 reset_sigpid_() {
-    SIGPID=" $(subpid_)"
+    SIGPID=(" $(subpid_)")
     for pid in $(subpid_); do
         [[ $SIGPID == *" $pid "* ]] && SIGPID+=("$pid")
     done
