@@ -1,6 +1,6 @@
 type -t kill_signal_ >/dev/null || \
 kill_signal_() {
-    [[ $# -ne 0 ]] || set -- $SIGPID
+    [[ $# -ne 0 ]] || set -- "${SIGPID[@]}"
     for ((;$# > 0;)) do
         [[ -n $1 && $(realpath "$(awk '{printf $2}' <<< "$(ps -o args= "$1")")") == $(realpath "$0") ]] && \
         kill "$1"
@@ -78,17 +78,10 @@ timestamp_() {
 }
 
 subpid_() {
-    local ln="$(ps_subpids_)"
-    local ref=" $(echo $(ps_subpids_)) "
     local pid
-    for pid in ${ln[@]}; do
-        pid=" $pid "
-        [[ $ref != *$pid* || $pid -eq $$ ]] || echo -n "$pid"
+    for pid in $(ps -o args= -o pid= | grep "$0" | awk '{print $NF}'); do
+        [[ $pid -eq $$ ]] || echo -n "$pid "
     done
-}
-
-ps_subpids_() {
-    ps -o args= -o pid= | grep "$0" | awk '{print $NF}'
 }
 
 [[ RSV -le 0 ]] 2>/dev/null || \
@@ -112,8 +105,12 @@ eval "$(recall_ run_/reserve)" BKPID COLOR HEAD LN PSTKB164 PSTKB167 PSTLN PSTWR
             eval "$SIGWRK"
         done &
     ) 2>/dev/null
-    SIGPID="$(subpid_)"
-    PST=(PST[1] "kill_signal_$SIGPID")
+    SIGPID=" $(subpid_)"
+    for pid in $(subpid_); do
+        [[ $SIGPID == *" $pid "* ]] && SIGPID+=("$pid")
+    done
+    SIGPID=("${SIGPID[@]:1}")
+    PST=(PST[1] 'kill_signal_ ${SIGPID[*]}')
     PRE=(PRE[1] 'PST=(PST[1] '\''PST=("${PST[@]:2}")'\'' "${PST[@]}")')
 }
 
