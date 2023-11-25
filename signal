@@ -1,12 +1,32 @@
 type -t kill_signal_ >/dev/null || \
 kill_signal_() {
-    [[ $# -ne 0 ]] || set -- "${SIGPID[@]}"
+    [[ $# -ne 0 ]] || {
+        local -a SIGPID
+        reset_sigpid_
+        set -- "${SIGPID[@]}"
+    }
     for ((;$# > 0;)) do
         [[ -n $1 && $(realpath "$(awk '{printf $2}' <<< "$(ps -o args= "$1")")") == $(realpath "$0") ]] && \
         kill "$1"
         shift
     done 2>/dev/null
 }
+
+reset_sigpid_() {
+    SIGPID=" $(subpid_)"
+    for pid in $(subpid_); do
+        [[ $SIGPID == *" $pid "* ]] && SIGPID+=("$pid")
+    done
+    SIGPID=("${SIGPID[@]:1}")
+}
+
+subpid_() {
+    local pid
+    for pid in $(ps -o args= -o pid= | grep "$0" | awk '{print $NF}'); do
+        [[ $pid -eq $$ ]] || echo -n "$pid "
+    done
+}
+
 [[ -z $SIGPID ]] || \
 kill_signal_
 
@@ -77,13 +97,6 @@ timestamp_() {
     fi 2>/dev/null
 }
 
-subpid_() {
-    local pid
-    for pid in $(ps -o args= -o pid= | grep "$0" | awk '{print $NF}'); do
-        [[ $pid -eq $$ ]] || echo -n "$pid "
-    done
-}
-
 [[ RSV -le 0 ]] 2>/dev/null || \
 eval "$(recall_ run_/reserve)" BKPID COLOR HEAD LN PSTKB164 PSTKB167 PSTLN PSTWRK REF SIGPID SIGTS SIGUSR SIGWRK STATUS THREAD TRACE
 
@@ -105,11 +118,7 @@ eval "$(recall_ run_/reserve)" BKPID COLOR HEAD LN PSTKB164 PSTKB167 PSTLN PSTWR
             eval "$SIGWRK"
         done &
     ) 2>/dev/null
-    SIGPID=" $(subpid_)"
-    for pid in $(subpid_); do
-        [[ $SIGPID == *" $pid "* ]] && SIGPID+=("$pid")
-    done
-    SIGPID=("${SIGPID[@]:1}")
+    reset_sigpid_
     PST=(PST[1] 'kill_signal_ ${SIGPID[*]}')
     PRE=(PRE[1] 'PST=(PST[1] '\''PST=("${PST[@]:2}")'\'' "${PST[@]}")')
 }
