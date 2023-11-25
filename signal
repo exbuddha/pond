@@ -1,8 +1,10 @@
 type -t kill_signal_ >/dev/null || \
 kill_signal_() {
     [[ $# -ne 0 ]] || {
-        local -a SIGPID
-        reset_sigpid_
+        [[ $SIGPID == 0 ]] && {
+            local -a SIGPID
+            reset_sigpid_
+        }
         set -- "${SIGPID[@]}"
     }
     for ((;$# > 0;)) do
