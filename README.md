@@ -37,7 +37,7 @@
 
     # same as above only inside command line
     NKL="list of processes to keep alive" \
-    kill_signal_ list of processes to kill
+    kill_signal_ [ list of processes to kill ]
     ```
 
   - Press `F8` to evaluate the command line.
