@@ -30,6 +30,14 @@
 
     # try to terminate all signal processes
     SIG=0 SIGPID=0 ./run exit
+
+    # try to terminate specific signal processes
+    NKL="list of processes to keep alive" \
+    SIG=0 SIGPID=0 ./run exit
+
+    # same as above only inside command line
+    NKL="list of processes to keep alive" \
+    kill_signal_ list of processes to kill
     ```
 
   - Press `F8` to evaluate the command line.
@@ -40,7 +48,7 @@
 
   - Press `F5` to refresh the screen.
 
-  - **Reserved variables:** `BKPID`, `COLOR`, `HEAD`, `LN`, `PRE`, `PST`, `PSTKB164`, `PSTKB167`, `PSTLN`, `PSTWRK`, `REF`, `SIG`, `SIGPID`, `SIGTS`, `SIGUSR`, `SIGWRK`, `SLEEP`, `STATUS`, `STLN`, `STREF`, `THREAD`, `TRACE`
+  - **Reserved variables:** `BKPID`, `COLOR`, `HEAD`, `LN`, `NKL`, `PRE`, `PST`, `PSTKB164`, `PSTKB167`, `PSTLN`, `PSTWRK`, `REF`, `SIG`, `SIGPID`, `SIGTS`, `SIGUSR`, `SIGWRK`, `SLEEP`, `STATUS`, `STLN`, `STREF`, `THREAD`, `TRACE`
 
   - **Reserved functions:** `kill_signal_`, `reset_sigpid_`, `subpid_`, `update_`, `refresh_`, `refresh_status_`, `ipclock_`, `timestamp_`
 

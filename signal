@@ -8,16 +8,17 @@ kill_signal_() {
         set -- "${SIGPID[@]}"
     }
     for ((;$# > 0;)) do
-        [[ -n $1 && $(realpath "$(awk '{printf $2}' <<< "$(ps -o args= "$1")")") == $(realpath "$0") ]] && \
+        [[ -n $1 && $(realpath "$(awk '{printf $2}' <<< "$(ps -o args= "$1")")") == $(realpath "$0") && " ${NKL[*]} " != *" $1 "* ]] && \
         kill "$1"
         shift
     done 2>/dev/null
 }
 
 reset_sigpid_() {
+    set -- " $* "
     SIGPID=(" $(subpid_)")
     for pid in $(subpid_); do
-        [[ $SIGPID == *" $pid "* ]] && SIGPID+=("$pid")
+        [[ $SIGPID == *" $pid "* && $* != *" $pid "* ]] && SIGPID+=("$pid")
     done
     SIGPID=("${SIGPID[@]:1}")
 }
