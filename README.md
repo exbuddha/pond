@@ -1,16 +1,16 @@
 ## Asynchronous Bash Script Runner
 
-  - `./run anything` in terminal to be executed after signal process is started and before stopping at the command prompt. If no arguments are passed, `.cmd` file is sourced from the current directory if it exists.
+  - `./run anything` in terminal to be executed after signal process is started and before stopping at the command prompt. If no arguments are passed, `.cmd` file is sourced from the **current** directory if it exists.
 
   - If `SIG` is set equal to `0` prior to starting the runner, signal process will not be started. Otherwise, set it equal to a signal string (default: `SIGUSR1`) to be used by the new signal process to interrupt the command-line process.
 
-  - Every time a signal process is started, `.head` and `.update` files are first deleted in the current directory.
+  - Every time a signal process is started, `.head` and `.update` files are first deleted in the **current** directory.
 
-  - Signal process initially, and every time after it sources `.head` file, or every `SLEEP` seconds after that file is not found, will interrupt the command-line process using `SIG` unless this process is terminated or `SIG` is empty.
+  - Signal process initially, and every time after it sources `.head` file inside the **work** directory, or every `SLEEP` seconds after that file is not found, will interrupt the command-line process using `SIG` unless this process is terminated or `SIG` is empty.
 
-  - **[Command-line process]** Every time the command-line process is interrupted, it immediately looks for `.update` file inside the current directory and sources it. If the file does not exist, `refresh_()` is called. The value of `SIG` is passed as argument in both calls so that multiple signal processes may be detected. The process then continues from where it was interrupted. Console update tasks must be performed in this process. `BKPID` contains the command-line process number.
+  - **[Command-line process]** Every time the command-line process is interrupted, it immediately looks for `.update` file inside the **current** directory and sources it. If the file does not exist, `refresh_()` is called. The value of `SIG` is passed as argument in both calls so that multiple signal processes may be detected. The process then continues from where it was interrupted. Console update tasks must be performed in this process. `BKPID` contains the command-line process number.
 
-  - **[Signal process]** After each interruption, the signal process looks for `.head` file inside the current directory, then sources and deletes it only on success, after making an incremental copy of it inside *.th/pid/date* sub-directory of the work directory unless `TRACE` is equal to `0`. If the file does not exist, the process sources `.setup` file then sleeps for `SLEEP` seconds (default: `1`). This logic is repeated by evaluating `SIGWRK` that sources the *task* script or exits with code 2 if it is not found in the work or the source directory. Asynchronous tasks are performed in this process. `SIGPID` contains the signal process number, `SIGTS` holds the process date, and `HEAD` holds the latest saved task number.
+  - **[Signal process]** After each interruption, the signal process looks for `.head` file inside the **work** directory, then sources and deletes it only on success, after making an incremental copy of it inside *.th/pid/date* sub-directory of the **work** directory unless `TRACE` is equal to `0`. If the file does not exist, the process sources `.setup` file in the **current** directory then sleeps for `SLEEP` seconds (default: `1`). This logic is repeated by evaluating `SIGWRK` that sources the *task* script or exits with code 2 if it is not found in the **work** or the **source** directory. Asynchronous tasks are performed in this process. `SIGPID` contains the signal process number, `SIGTS` holds the process date, and `HEAD` holds the latest saved task number.
 
   - Every time the *signal* script is sourced from the command-line, it takes the previous `SIGPID` values and attempts to terminate any process that was issued by a matching command string. In order to start a new signal process without terminating any of the previous ones clear or unset `SIGPID` and optionally set `SIG` equal to an unused signal string prior to sourcing the script again.
 

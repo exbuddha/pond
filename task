@@ -1,9 +1,9 @@
-if [[ -e .head ]]; then
+if [[ -e ${WKD%/}/.head ]]; then
     [[ TRACE -eq 0 ]] || {
         mkdir -p "$THREAD/$$/$SIGTS"
-        cp -p .head "$THREAD/$$/$SIGTS/$((++HEAD))"
+        cp -p "${WKD%/}"/.head "$THREAD/$$/$SIGTS/$((++HEAD))"
     }
-    . .head && rm .head
+    . "${WKD%/}"/.head && rm "${WKD%/}"/.head
 else
     . .setup
     [[ $SLEEP == */* ]] && SLEEP="$(<$SLEEP)"
