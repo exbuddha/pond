@@ -12,6 +12,7 @@ kill_signal_() {
         kill "$1"
         shift
     done 2>/dev/null
+    SIGPID=()
 }
 
 reset_sigpid_() {
