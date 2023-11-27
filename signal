@@ -131,9 +131,9 @@ eval "$(recall_ run_/reserve)" BKPID COLOR HEAD LN NKL PSTKB164 PSTKB167 PSTLN P
 WRK=
 PSTWRK=
 BKP=
-PSTKB164='refresh_;LN=1'
-PSTKB167='refresh_;LN='
-PSTLN='[[ LN -eq 0 ]]||refresh_'
+PSTKB164='refresh_status_;LN=1'
+PSTKB167='refresh_status_;LN='
+PSTLN='[[ LN -eq 0 ]]||refresh_status_'
 LN=
 
 trap break SIGINT
