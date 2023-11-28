@@ -14,7 +14,7 @@
 
   - Every time the *signal* script is sourced from the command-line, it takes the previous `SIGPID` values and attempts to terminate any process that was issued by a matching command string. In order to start a new signal process without terminating any of the previous ones clear or unset `SIGPID` and optionally set `SIG` equal to an unused signal string prior to sourcing the script again.
 
-    Every time a signal process is started, `.head` and `.update` files are first deleted in the **current** directory. This will be avoided if the work directory is the same as the current directory. It is generally good practice to start a new signal process inside its own work directory and leave the current directory for the command-line and setup processes.
+    Every time a signal process is started, `.head` and `.update` files are first deleted in the **current** directory. This will be avoided if the work directory is **not** the same as the current directory. It is generally good practice to start a new signal process inside its own work directory and leave the current directory for the command-line and setup processes.
 
     ```bash
     # first signal process
