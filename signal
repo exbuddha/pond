@@ -36,7 +36,7 @@ subpid_() {
 [[ -z $SIGPID ]] || \
 kill_signal_
 
-THREAD="$WKD/.th"
+THREAD="${WKD%/}/.th"
 TRACE="${TRACE:-1}"
 SIG="${SIG:-SIGUSR1}"
 [[ -n $SIGWRK ]] || \
