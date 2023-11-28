@@ -38,7 +38,7 @@ kill_signal_
 
 THREAD="$WKD/.th"
 TRACE="${TRACE:-1}"
-SIG=${SIG:-SIGUSR1}
+SIG="${SIG:-SIGUSR1}"
 [[ -n $SIGWRK ]] || \
 SIGWRK='if [[ -e ${WKD%/}/task ]];then . "${WKD%/}/task";elif [[ ${SRC%/} != ${WKD%/}&&-e ${SRC%/}/task ]];then . "${SRC%/}/task";else exit 2;fi'
 SLEEP="${SLEEP:-1}"
@@ -52,7 +52,7 @@ update_() {
     if [[ -e .update ]]; then
         . .update
     else
-        refresh_ "$1"
+        refresh_ "$@"
     fi
 }
 
@@ -107,20 +107,22 @@ timestamp_() {
 eval "$(recall_ run_/reserve)" BKPID COLOR HEAD LN NKL PSTKB164 PSTKB167 PSTLN PSTWRK REF SIGPID SIGTS SIGUSR SIGWRK STATUS THREAD TRACE
 
 [[ $SIG != 0 ]] && {
-    rm .head 2>/dev/null
-    rm .update 2>/dev/null
+    [[ $(realpath "$WKD") == $PWD ]] && {
+        rm .head
+        rm .update
+    } 2>/dev/null
 
-    trap "update_ "$SIG $SIG
     if [[ COLOR -eq 0 ]] 2>/dev/null; then
         echo 'Starting new signal process'
     else
         echo -e '\033[0;33mStarting new signal process\033[0m'
     fi
     SIGTS="$(timestamp_)"
+    trap "update_ $SIG $SIGTS" "$SIG"
     (
         BKPID="$$"
         for ((;;)) do
-            [[ -n $SIG ]] && ps "$BKPID" >/dev/null && kill -${SIG#-} $BKPID
+            [[ -n $SIG ]] && ps "$BKPID" >/dev/null && kill -"${SIG#-}" $BKPID
             eval "$SIGWRK"
         done &
     ) 2>/dev/null
