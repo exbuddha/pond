@@ -31,7 +31,7 @@
     ./console
     ```
 
-    **WARNING:** A common mistake would be to start the second signal process using a local `SIGPID` in a single-line command such as `SIGPID= . signal` and evaluating it inside the the command-line. This will lead to issues at termination time because the value of `SIGPID` will not persist once the script is sourced. Instead, this variable must be cleared in the current enclosure.
+    **WARNING:** A common mistake would be to start the second signal process using a local `SIGPID` in a single-line command such as `SIGPID= . signal` and evaluating it inside the command-line. This will lead to issues at termination time because the value of `SIGPID` will not persist once the script is sourced. Instead, this variable must be cleared in the current enclosure.
 
   - Before stopping at the prompt or reading a new byte from keyboard, `PSTWRK` is evaluated. After reading a new byte from keyboard, `WRK` is evaluated. Then, that byte is processed for a key press event if `BKZ` is equal to `0`. Both variables are cleared before running the terminal command and stopping at the prompt. `BKP` is also cleared in order to safely start the command prompt with the correct keybinding path. Therefore, these variables must be set either in the terminal command or `.cmd` file.
 
