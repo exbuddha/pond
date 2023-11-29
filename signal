@@ -91,7 +91,7 @@ ipclock_() {
     )"
     [[ -z $ip ]] || printf "$ip"
     local clk="$(date +%H:%M:%S 2>/dev/null)"
-    [[ -z $clk ]] || { [[ -z "$ip" ]] || printf ' - '; printf "$clk"; }
+    [[ -z $clk ]] || { [[ -z "$ip" ]] || printf ' | '; printf "$clk"; }
 }
 
 timestamp_() {
