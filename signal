@@ -63,7 +63,7 @@ refresh_() {
 
 refresh_status_() {
     [[ $((STREF++)) -ne 0 ]] || {
-        type -t "$STATUS" >/dev/null && STLN="$("$STATUS" 2>/dev/null)"
+        type -t "$STATUS" >/dev/null && STLN="$("${STATUS[@]}" 2>/dev/null)"
         [[ -z ${STLN+1} ]] || {
             local -i x="$(($(tput cols)-${#STLN}-4))"
             tput -S <<!
