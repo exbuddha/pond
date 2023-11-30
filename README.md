@@ -85,3 +85,49 @@ Starting new signal process
 9
 10
 ```
+
+Evaluating this command in terminal starts two new signal processes in their own work directories (*SIGUSR1* and *SIGUSR2*) and resets `SIGPID` in each sub-process to the appropriate values in the right order.
+
+```bash
+WKD=SIGUSR1 \
+SIG=SIGUSR1 \
+SIGPID= \
+./run eval \
+    mkdir -p \"\$WKD\" \; \
+    set -- \$SIGPID \; \
+    SIGPID= \; \
+    WKD=SIGUSR2 \
+    SIG=SIGUSR2 \
+    . \"\$SRC\"/signal eval \
+        mkdir -p \\\"\\\$WKD\\\" \\\; \
+        if [[ \\\$SIGPID != \"\$1\" ]] \\\; then \
+            SIGPID[1]=\\\$SIGPID \\\; \
+            SIGPID=\$1 \\\; \
+        fi \\\; \
+        echo SIGPID=\\\$SIGPID \\\\\\\; \
+             SIGPID[1]=\\\${SIGPID[1]} \\\> \$\(printf %q \"\$WKD\"\)/.head \\\; \
+        echo SIGPID=\\\${SIGPID[1]} \\\\\\\; \
+             SIGPID[1]=\\\$SIGPID \\\> \\\"\\\$WKD\\\"/.head \; \
+    set --
+
+Starting new signal process
+Starting new signal process
+
+ps
+  PID TTY           TIME CMD
+ 4504 ttys001    0:00.00 sleep 1
+ 4515 ttys001    0:00.00 sleep 1
+86744 ttys001    0:03.73 -bash
+95151 ttys001    0:01.93 bash ./run ...
+95254 ttys001    0:00.40 bash ./run ...
+95299 ttys001    0:00.41 bash ./run ...
+
+echo ${SIGPID[*]}       # in command-line process
+95254 95299
+
+echo echo \${SIGPID[*]} > SIGUSR1/.head
+95254 95299
+
+echo echo \${SIGPID[*]} > SIGUSR2/.head
+95299 95254
+```
