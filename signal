@@ -8,7 +8,7 @@ kill_signal_() {
         set -- "${SIGPID[@]}"
     }
     for ((;$# > 0;)) do
-        [[ -n $1 && $(realpath "$(awk '{printf $2}' <<< "$(ps -o args= "$1")")") == $(realpath "$0") && " ${NKL[*]} " != *" $1 "* ]] && \
+        [[ -n $1 && $(realpath "$(awk '{printf $9}' <<< "$(ps -f "$1")")") == $(realpath "$0") && " ${NKL[*]} " != *" $1 "* ]] && \
         kill "$1"
         shift
     done 2>/dev/null
@@ -28,7 +28,7 @@ reset_sigpid_() {
 
 subpid_() {
     local pid
-    for pid in $(ps -o args= -o pid= | grep "$0" | awk '{print $NF}'); do
+    for pid in $(ps -f | grep "$0" | awk '{print $2}'); do
         [[ $pid -eq $$ ]] || echo -n "$pid "
     done
 }
