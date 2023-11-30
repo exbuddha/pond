@@ -67,6 +67,8 @@
 
   - **Reserved functions:** `kill_signal_`, `reset_sigpid_`, `subpid_`, `update_`, `refresh_`, `refresh_status_`, `ipclock_`, `timestamp_`
 
+  - For security reasons, using blank characters in directory or file names **MUST** be avoided.
+
 ### Example:
 
 Evaluating this command in terminal prints `HEAD` in console __asynchronously__ until it is greater than `9` and stops:
@@ -86,7 +88,33 @@ Starting new signal process
 10
 ```
 
-Evaluating this command in terminal starts two new signal processes in their own work directories (*SIGUSR1* and *SIGUSR2*) and resets `SIGPID` in each sub-process to the appropriate values in the right order.
+Evaluating this command in terminal starts a new signal process in its own work directory (*SIGUSR1*) and resets `SIGPID` in that sub-process to the appropriate value:
+
+```bash
+WKD=SIGUSR1 \
+SIG=SIGUSR1 \
+SIGPID= \
+run eval \
+    mkdir -p \"\$WKD\" \; \
+    echo SIGPID=\$SIGPID \> \"\$WKD\"\/.head
+
+Starting new signal process
+
+ps
+  PID TTY           TIME CMD
+21603 ttys001    0:00.29 bash ./run ...
+21706 ttys001    0:00.05 bash ./run ...
+23019 ttys001    0:00.00 sleep 1
+86744 ttys001    0:03.84 -bash
+
+echo ${SIGPID[*]}       # in command-line process
+21706
+
+echo echo \${SIGPID[*]} > SIGUSR1/.head
+21706
+```
+
+Evaluating this command in terminal starts two new signal processes in their own work directories (*SIGUSR1* and *SIGUSR2*) and resets `SIGPID` in each sub-process to the appropriate values in the right order:
 
 ```bash
 WKD=SIGUSR1 \
