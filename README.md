@@ -94,7 +94,7 @@ Evaluating this command in terminal starts a new signal process in its own work 
 WKD=SIGUSR1 \
 SIG=SIGUSR1 \
 SIGPID= \
-run eval \
+./run eval \
     mkdir -p \"\$WKD\" \; \
     echo SIGPID=\$SIGPID \> \"\$WKD\"\/.head
 
