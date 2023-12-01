@@ -96,7 +96,8 @@ SIG=SIGUSR1 \
 SIGPID= \
 ./run eval \
     mkdir -p \"\$WKD\" \; \
-    echo SIGPID=\$SIGPID \> \"\$WKD\"\/.head
+    echo SIGPID=\$SIGPID \> \"\$WKD\"/.head \; \
+    set --
 
 Starting new signal process
 
