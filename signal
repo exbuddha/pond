@@ -104,7 +104,7 @@ timestamp_() {
 }
 
 [[ RSV -le 0 ]] 2>/dev/null || \
-eval "$(recall_ run_/reserve)" BKPID COLOR HEAD LN NKL PSTKB164 PSTKB167 PSTLN PSTWRK REF SIGPID SIGTS SIGUSR SIGWRK STATUS THREAD TRACE
+eval "$(recall_ run_/reserve)" BKPID COLOR HEAD LN NKL PSTKB164 PSTKB167 PSTLN PSTWRK SIGPID SIGTS SIGUSR SIGWRK STATUS THREAD TRACE
 
 [[ $SIG != 0 ]] && {
     [[ $(realpath "$WKD") == $PWD ]] && {
