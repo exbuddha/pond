@@ -3,4 +3,4 @@ cub1
 sc
 el
 !
-echo -n "${'"$BKW"'LN:'"$BKW"'I}";tput rc;}'
+echo -n "${'"$BKW"'LN:'"$BKW"'I}";tput rc;}';eval "$PSTLN"

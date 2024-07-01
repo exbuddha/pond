@@ -1,0 +1,1 @@
+if [[ -e ${WKD%/}/.head ]];then [[ TRACE -eq 0 ]]||{ mkdir -p "${THREAD%/}/$$/$SIGTS";cp -p "${WKD%/}/.head" "${THREAD%/}/$$/$SIGTS/$((++HEAD))";};return_ "$BKR";. "${WKD%/}/.head";BKR="$?";echo -n "$BKR">"${WKD%/}/.return";return_ "$BKR"&&rm "${WKD%/}/.head"||eval "$TAIL";else . .setup;[[ $SLEEP == */* ]]&&SLEEP="$(<$SLEEP)";sleep $SLEEP||sleep 1;fi

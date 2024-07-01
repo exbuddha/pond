@@ -1,0 +1,2 @@
+#!/usr/bin/env bash
+SIG=${SIG:-${1:-0}} SIGPID= "$(sed 's/\/[^\/]*$//' <<< "$0")/run" :

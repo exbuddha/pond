@@ -2,4 +2,4 @@ eval '[[ '"$BKW"'I -lt ${#'"$BKW"'LN} ]]&&{ '"$BKW"'LN="${'"$BKW"'LN:0:'"$BKW"'I
 sc
 el
 !
-echo -n "${'"$BKW"'LN:'"$BKW"'I}";tput rc;}'
+echo -n "${'"$BKW"'LN:'"$BKW"'I}";tput rc;}';eval "$PSTLN"
