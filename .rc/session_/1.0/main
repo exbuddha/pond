@@ -1,0 +1,150 @@
+[[ $(type -t exec) == builtin&&$(type -t flock) == file ]]||return 2
+
+#reserve all vars
+#RSV=(1)
+[[ RSV -le 0 ]] 2>/dev/null||eval "$(recall_ run_/reserve)" FD INR LKFL LKMD LRC NKL SIGPID SNDIR SNERR SNLKFL TMOUT
+
+#parse opts to understand requirements
+eval "$(resource_ session_/parse_opts)"
+mkdir -p "$SNDIR" #may not be required
+
+#set global default overrides
+#OSTYPE=darwin
+local -i FD=200
+local -r LKFL="${SNDIR%/}/${SNLKFL:-.lock}"
+local LKMD='>'
+
+#find and prepare all resources required by global settings and session
+#eval "$(recall_ run_/prep)" env_ str_ sys_ unsanitize_
+
+lock_(){
+    local FD="${2:-$FD}"
+    eval 'exec '"$FD${3:-${LKMD:->}}"'"${4:-${LKFL:-.lock}}"'
+    flock -x "$FD" -c "$1"
+}
+
+nb_lock_(){
+    local FD="${2:-$FD}"
+    eval 'exec '"$FD${3:-${LKMD:->}}"'"${4:-${LKFL:-.lock}}"'
+    flock -xn "$FD" -c "$1"
+}
+
+unlock_(){
+    eval 'exec '"${1:-$FD}${2:-${LKMD:->}}"'&-'
+}
+
+create_session_(){
+    [[ SLEEP -ge 0 ]]||SLEEP=1
+    [[ TMOUT -ge SLEEP ]]||TMOUT=SLEEP
+
+    #if create executes trap call while still inside the loop, it may cause discrepancy when broken by SIGINT
+    #therefore, run context must be recorded accurately and incorporated in logic for navigating by handling breaks
+    LRC="$?"
+    appoint_interrupt_function_
+    while LRC="$?" eval "$(resource_ run_/process/bypass_interrupt)"&&!flock -n "$LKFL" . "${SRC%/}/.rc/session_/@/create";do
+        LRC="$?" eval "$(resource_ run_/timeout)"
+    done
+    eval "$(resource_ run_/process/navigate_interrupt)"
+
+    [[ ${#SIGPID[@]} -eq 1 ]]||return 4
+}
+
+interrupt_(){
+    #navigates breaks to the correct origination point in code at runtime based on program context records
+    #the correct way to issue an interrupt once session is created, instead of break, would be to issue a session-wide break event and wait for session controller to resolve it
+    [[ ${#FUNCNAME[@]} -ne INTTRACE[2]||-z $BKX ]]||return
+    eval '(('"$BKZ"'--));[[ '"$BKZ"' -eq -1 ]]'&&break
+}
+
+#prepares run context for loop interruption
+#two env vars are to be declared in main_ and updated in run_ before each break point:
+#INTTAIL and INTTRACE working side-by-side with FUNCNAME to facilitate this logic
+#INTTAIL keeps track of the last indexes (tail) of FUNCNAME where breakpoints are issued
+#INTTRACE handles the navigation history as breaks are being rolled back (first index points to the currently active interrupt origin, only set in run_)
+#INTTRACE first element is used as cursor while the other elements hold history (second element points to before where the first global interrupt was appointed, third element points to current global interrupt point)
+#INR and INRHIST are respectively used locally and globally in order to reflect the variable and function state within each appointed resource (function or script)
+#many times internal local values are not retrievable outside functions; in such cases, INR handles recording the values as navigate_interrupt leaves that context while INRHIST handles the overall history for this process
+#this implies that values must be sensitive within resources to RETRY flag, and are re-populated by INR when they receive their significant value inside retry contexts
+#and because of this reason, INR will have to locally defined within each context (so the super context values are also preserved) and INRHIST becomes useful for handling repeated retries in case there are failures again
+#INRHIST can be written to disk or stay in memory; however, memory consumption demands promote using disk everywhere unless disk write is not permitted at the time
+appoint_interrupt_() {
+    LRC="${LRC:-$?}"
+    INTTRACE+=("$MODE" "${#INTTAIL[@]}" "$@" "$((${#@}+2))")
+    return "$LRC"
+}
+
+#appoint, ignore, and remove functions should also allow LN or LINE to be passed as a guide for enacting INR values at the right location in code
+appoint_interrupt_function_(){
+    #use 0 for function
+    MODE=0 appoint_interrupt_
+}
+appoint_interrupt_script_(){
+    #use 1 for script
+    MODE=1 appoint_interrupt_
+}
+
+#there needs to be a function for ignoring/pausing interrupts based on TMOUT and SLEEP values inside loops, given bypass_interrupt gets called at every iteration
+#generally speaking, there can be two kinds of reactions to interrupts: 1. totally remove trap and allow exits, 2. ignore interrupts and relay the work to future
+#bypass should handle interrupts issued by keeping a record of them and reacting to them until the next navigate_interrupt is called for resetting or reacting
+#UNTIL_TMOUT and UNTIL_COUNT must be used for this purpose
+#optionally instead of bypass, a new sleep_ function may be added for even more accurate time tracking
+ignore_interrupt_timeout_function_() {
+    #use 2 and 4 for function (use 6 for full ignore)
+    MODE=2 appoint_interrupt_ TMOUT SLEEP 0
+}
+ignore_interrupt_timeout_script_() {
+    #use 3 and 5 for script (use 7 for full ignore)
+    MODE=3 appoint_interrupt_ TMOUT SLEEP 0
+}
+ignore_interrupt_count_function_() {
+    MODE=4 appoint_interrupt_ COUNT 0
+}
+ignore_interrupt_count_script_() {
+    MODE=5 appoint_interrupt_ COUNT 0
+}
+remove_interrupt_function_() {
+    MODE=6 appoint_interrupt_
+}
+remove_interrupt_script_() {
+    MODE=7 appoint_interrupt_
+}
+
+#sub-process functions must be declared earlier than signal script in order to perform some UI tasks
+#the original functions should be kept in-tact for signal script to work correctly
+
+kill_signal_(){ [[ $# -ne 0 ]]||{ [[ $SIGPID == 0 ]]&&{ local -a SIGPID;reset_sigpid_;};set -- "${SIGPID[@]}";};for((;$#>0;))do [[ -n $1&&$(realpath "$(awk '{printf $9}'<<<"$(ps -f "$1")")") == $(realpath "$0")&&" ${NKL[*]} " != *" $1 "* ]]&&kill "$1";shift;done 2>/dev/null;SIGPID=();}
+
+reset_sigpid_(){ set -- " $* ";SIGPID=(" $(subpid_)");local pid;for pid in $(subpid_);do pid=" $pid ";[[ $SIGPID == *$pid*&&$* != *$pid* ]]&&SIGPID+=($pid);done;SIGPID=("${SIGPID[@]:1}");}
+
+subpid_(){ local pid;for pid in $(ps -f|grep "$0"|awk '{print $2}');do [[ $pid -eq $$ ]]||echo -n "$pid ";done;}
+
+#alternative: CMD='. "${SRC%/}/.rc/session_/@/create"' ERR='kill_signal_ ${SIGPID[*]}' . "${SRC%/}/.rc/session_/@/block"
+#             added appoint_interrupt_script_ and navigate_interrupt calls
+SLEEP="${SLEEP:-1}" TMOUT="${TMOUT:-5}" create_session_||{
+#another var besides BKZ must be used here to navigate the case correctly (SNERR)
+#BKZ must be only kept for counting the number of times ^C has been pressed
+SNERR="$?"
+
+#---- after break is issued:
+
+#in order to restart session:
+#1. BKZ has to be set to a negative var identifier,
+#2. "$BKW"READ needs to be reset appropriately,
+#3. WRK and _64run_95_47parse_95opts reinstantiated
+eval "$BKW"'READ=return_\ 1'
+
+#BKX has to be set properly when SIGINT breaks the inner for-loop
+#    should show the error msg and user prompt for next attempt
+#PST can catch BKZ values > 0
+BKX='WRK='\''eval "$(resource_ run_/process/view_session_error)"&&{ BKX=;WRK="${WRK[1]}";unset -v WRK[1];}'\'';continue'
+eval "$(resource_ run_/process/navigate_interrupt)"
+}
+
+eval "$BKW"'READ='
+WRK=()
+
+#required only for persistant vars
+#unset -v SNERR
+
+#main_ can be unset earlier in the first line of run_
+unset -f session_ signal_ext_

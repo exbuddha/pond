@@ -1,0 +1,7 @@
+local SNDIR="${SNDIR:-.session}"
+#parse session options
+local -r SNDIR="$(realpath "${SNDIR:-$PWD/.session}")"
+local SNLKFL=.lock
+#OUT, SRC, and WKD are initialized and handled by session
+OUT="${OUT:-$PWD}"
+#set --

@@ -1,0 +1,6 @@
+#note that SIGPID must NOT be modified by a trap callback without the session lock
+SIGPID=()
+#success: lock is acquired, assign session directory incl. a record-in-file for session id and process id
+#also note that many resources can be unset in the new sproc (.head file)
+set --
+WKD="${SRC%/}/.rc/session_/@/init" ECHO=-1 SLEEP= TMOUT=1 . "${SRC%/}/.rc/run_/@/signal"

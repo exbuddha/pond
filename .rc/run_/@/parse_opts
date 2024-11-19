@@ -1,1 +1,1 @@
-WRK='set --'"$(for((;$#>0;))do printf ' %q' "$1";shift;done)"';. "${SRC%/}/.rc/run_/@/signal"';set --;_64run_95_47parse_95opts=
+WRK='[[ $(type -t session_) == function ]]||{ UDX='\''exit_ 2'\'' eval "$(recall_ run_/prep)" session_;};[[ -z $WRK ]]||{ WRK[1]="$WRK";WRK=;};eval '\''local -i '\''"$BKW"'\''READ'\'';local INR;local -i SNERR=;session_'"$(for((;$#>0;))do printf ' %q' "$1";shift;done)"'||exit_;eval "$(resource_ run_/process/navigate_interrupt)"';set --;_64run_95_47parse_95opts=

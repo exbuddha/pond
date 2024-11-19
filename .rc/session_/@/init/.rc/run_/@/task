@@ -1,0 +1,5 @@
+#signal init task
+unset -f signal_ext_
+
+#set next SIGWRK
+#SIGWRK=

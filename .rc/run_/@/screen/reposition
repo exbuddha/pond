@@ -1,0 +1,8 @@
+case "$OSTYPE" in
+    darwin*)
+        osascript -e 'tell application "Terminal" to set position of front window to {'"$1"\,"$2"\}
+        ;;
+    *)
+        return_ 1
+        ;;
+esac

@@ -1,0 +1,10 @@
+#locked
+case "$OSTYPE" in
+    darwin*)
+        #handle user prompts
+        NONINTERACTIVE=1 brew install flock >/dev/null 2>&1
+        ;;
+    *)
+        return_ 1
+        ;;
+esac

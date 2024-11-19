@@ -1,0 +1,1 @@
+echo $(N=2 eval "$(recall_ str_/csv/get "$(eval "$(resource_ run_/screen/get_bounds)")")")

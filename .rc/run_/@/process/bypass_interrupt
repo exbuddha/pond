@@ -1,0 +1,4 @@
+#bypasses code inside loops up until the following navigate_interrupt or the next continuation
+#LRC="$?" ERR=SNERR eval "$(resource_ run_/process/bypass_interrupt)"
+eval '[[ '"$BKZ"' -eq 0 ]]'&&break
+return_ "$LRC"

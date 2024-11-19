@@ -1,0 +1,27 @@
+local SIG='SIGUSR1'
+local PRESIG='STATUS='
+#set --
+LRC="$?"
+appoint_interrupt_script_
+while LRC="$?" eval "$(resource_ run_/process/bypass_interrupt)";do
+
+nb_lock_ "$CMD"
+LRC="$?"
+
+#on fail, resolve the session by either exiting or waiting for lock to be released
+if [[ $LRC -eq 0 ]];then
+    unlock_||{
+        #handle error if unlock fails
+        eval "$ERR"
+        return 2
+    }
+    eval "$BKZ"\=
+    return
+else
+    #fail: lock is in use, kick into the periodic waiting mode for lock to be acquired again
+    LRC="$?" eval "$(resource_ run_/timeout)"
+    #continue
+fi
+
+done
+eval "$(resource_ run_/process/navigate_interrupt)"

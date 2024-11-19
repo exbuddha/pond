@@ -1,0 +1,1 @@
+eval "$(recall_ str_/trim)" "$(eval "$(recall_ str_/get)" "$*")"

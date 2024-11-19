@@ -1,1 +1,1 @@
-eval 'read -rsn1 '"$BKW"'KB';eval "$WRK"
+eval 'eval "$'"$BKW"'READ'\" 2>/dev/null&&{ eval 'read -rsn1 '"$BKW"'KB';eval "$WRK";}

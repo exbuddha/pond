@@ -1,0 +1,6 @@
+LRC="${LRC:-$?}"
+#navigates breaks to the correct origination point in code at runtime based on program context records
+eval '[[ '"$BKZ"' -eq 0 ]]'||{
+INTTRACE=("${INTTRACE[@]:0:${#INTTRACE[@]}-${INTTRACE[${#INTTRACE[@]}-1]}}")
+}
+return_ "$LRC"

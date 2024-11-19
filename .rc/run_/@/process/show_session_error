@@ -1,0 +1,21 @@
+#shows the error pane and handles user prompt in order to resolve and return to session creation phase again
+case "$SNERR" in
+4)
+    #too many signal processes
+    ;;
+3)
+    #timed out
+    ;;
+2)
+    #failed to unlock (not used in create_session_)
+    ;;
+esac
+
+#unset -v SNERR
+#navigate_interrupt should reset BKZ and WRK, for instance, to persist the error state in console if interrupted
+#this implies that after every function or source call wherein interrupt may be issued, there has to be another navigate_interrupt call for catching this base condition
+#WRK=
+#BKZ=
+
+#0 must not be returned in normal cases unless the error is resolved here
+return_ 1

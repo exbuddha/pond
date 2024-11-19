@@ -1,0 +1,5 @@
+[[ TMOUT -gt 0 ]]||return 3
+((TMOUT-=SLEEP))
+[[ TMOUT -ge 0 ]]||((SLEEP+=TMOUT))
+sleep "$SLEEP"
+return_ "$LRC"
